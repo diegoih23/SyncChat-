@@ -21,6 +21,43 @@ Una propuesta de arquitectura distribuida para la comunicación en tiempo real m
 
 </div>
 
+## Estructura del proyecto
+
+```text
+SyncChat-/
+├── backend/
+│   ├── microservicios/
+│   │   ├── servicio-autenticacion/
+│   │   ├── servicio-conversaciones/
+│   │   ├── servicio-chat/
+│   │   └── servicio-mensajes/
+│   ├── gateway/
+│   ├── base-datos/
+│   └── infraestructura/
+│       ├── postgres/
+│       ├── rabbitmq/
+│       └── docker-compose.yml
+├── frontend/
+│   └── src/
+│       ├── aplicacion/
+│       ├── componentes/
+│       ├── servicios/
+│       ├── hooks/
+│       ├── contextos/
+│       ├── recursos/
+│       ├── estilos/
+│       └── funcionalidades/
+│           ├── autenticacion/
+│           ├── conversaciones/
+│           ├── chat/
+│           ├── mensajes/
+│           └── perfil/
+├── .env.example
+└── .gitignore
+```
+
+Cada funcionalidad del frontend refleja el microservicio correspondiente y contiene sus propios `componentes/`, `paginas/`, `servicios/` y `hooks/`.
+
 ---
 
 ## 📌 Introducción

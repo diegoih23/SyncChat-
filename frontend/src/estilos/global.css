@@ -1,0 +1,29 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap');
+:root { color: #172033; background: #f5f7fb; font-family: 'DM Sans', sans-serif; font-synthesis: none; }
+* { box-sizing: border-box; }
+body { margin: 0; min-width: 320px; }
+button, input { font: inherit; }
+button { cursor: pointer; }
+.app-shell { display: flex; min-height: 100vh; }
+.sidebar { background: #101828; color: #d6dce7; display: flex; flex-direction: column; padding: 28px 18px 20px; width: 276px; }
+.brand, .mobile-brand { color: #fff; font-family: 'Space Grotesk', sans-serif; font-size: 21px; font-weight: 700; letter-spacing: -.04em; display: flex; align-items: center; gap: 10px; }
+.brand-mark { display: grid; place-items: center; background: #ff8066; border-radius: 9px; height: 31px; width: 31px; }
+.eyebrow { color: #8792a7; font-size: 11px; font-weight: 700; letter-spacing: .12em; margin: 48px 10px 12px; text-transform: uppercase; }
+.conversation-list { display: grid; gap: 5px; }
+.conversation { align-items: center; background: transparent; border: 0; border-radius: 10px; color: #aeb8ca; display: flex; gap: 11px; padding: 11px 10px; text-align: left; width: 100%; }
+.conversation.active { background: #27354a; color: #fff; }
+.conversation-icon { border-radius: 8px; color: #fff; display: grid; font-size: 10px; font-weight: 700; height: 29px; place-items: center; width: 29px; }
+.coral { background: #db806d; } .blue { background: #607bc5; } .green { background: #5b9b83; }
+.conversation-name { flex: 1; font-size: 13px; }
+.unread { background: #ff8066; border-radius: 10px; color: #fff; font-size: 10px; min-width: 18px; padding: 3px 5px; text-align: center; }
+.sidebar-footer { align-items: center; border-top: 1px solid #2c394e; display: flex; gap: 10px; margin-top: auto; padding: 20px 8px 0; }
+.sidebar-footer strong, .sidebar-footer small { display: block; } .sidebar-footer strong { color: #fff; font-size: 12px; } .sidebar-footer small { color: #8290a6; font-size: 11px; margin-top: 3px; }
+.avatar { align-items: center; background: #d9a36d; border-radius: 50%; color: #fff; display: inline-flex; flex: 0 0 auto; font-size: 10px; font-weight: 700; height: 34px; justify-content: center; width: 34px; } .avatar.purple { background: #8b80c8; }
+.workspace { flex: 1; min-width: 0; } .topbar { display: none; }
+.chat-panel { display: flex; flex-direction: column; height: 100vh; margin: 0 auto; max-width: 940px; padding: 48px 64px 38px; }
+.chat-header { align-items: flex-start; border-bottom: 1px solid #e2e7ef; display: flex; justify-content: space-between; padding-bottom: 28px; } .chat-header .eyebrow { margin: 0 0 6px; } h1 { font-family: 'Space Grotesk', sans-serif; font-size: 28px; letter-spacing: -.04em; margin: 0 0 9px; } .online { color: #7c8799; font-size: 12px; } .online i { background: #51b590; border-radius: 50%; display: inline-block; height: 7px; margin-right: 4px; width: 7px; }
+.details-button { background: #fff; border: 1px solid #e0e5ed; border-radius: 8px; color: #596579; font-size: 12px; padding: 9px 12px; } .details-button span { color: #a4adba; font-size: 15px; margin-left: 13px; }
+.messages { flex: 1; overflow: auto; padding: 28px 3px; } .message { display: flex; gap: 12px; margin-bottom: 26px; max-width: 660px; } .message-meta { align-items: baseline; display: flex; gap: 10px; } .message-meta strong { font-size: 13px; } time { color: #a2abba; font-size: 11px; } .message p { color: #5d687b; font-size: 13px; line-height: 1.6; margin: 5px 0 0; }
+.composer { background: #fff; border: 1px solid #dfe5ed; border-radius: 10px; display: flex; gap: 10px; padding: 7px; } .composer input { background: transparent; border: 0; color: #243047; flex: 1; outline: 0; padding: 10px; } .composer button, .profile-button { background: #ff8066; border: 0; border-radius: 7px; color: #fff; font-size: 12px; font-weight: 700; padding: 0 17px; }
+.profile-button, .mobile-brand { display: none; }
+@media (max-width: 700px) { .app-shell { display: block; } .sidebar { display: none; } .topbar { align-items: center; background: #101828; display: flex; justify-content: space-between; padding: 16px 20px; } .mobile-brand { display: block; font-size: 18px; } .profile-button { display: block; height: 31px; padding: 0; width: 31px; } .chat-panel { height: calc(100vh - 63px); padding: 28px 20px 20px; } h1 { font-size: 24px; } .details-button { padding: 8px; } }
