@@ -39,12 +39,13 @@ Actualmente, el proyecto se encuentra en la etapa de definición de su arquitect
 
 ### Objetivo general
 
-Desarrollar un sistema de chat en tiempo real basado en una arquitectura de microservicios que permita el intercambio instantáneo de mensajes entre usuarios y la gestión del historial de conversaciones.
+Desarrollar un sistema de chat en tiempo real basado en una arquitectura de microservicios que permita el intercambio instantáneo de mensajes entre usuarios y la gestión de la historia de conversaciones.
 
 ### Objetivos específicos
 
-- Implementar la comunicación en tiempo real mediante WebSockets y la mensajería asíncrona con RabbitMQ para el envío, la distribución y la recepción de mensajes.
-- Diseñar e integrar los microservicios mediante API REST, bases de datos independientes y contenedores Docker, facilitando la persistencia del historial de conversaciones y el funcionamiento integrado de la aplicación.
+- Implementar la comunicación en tiempo real mediante WebSockets y la mensajería asíncrona con RabbitMQ para garantizar el envío, la distribución y la recepción de mensajes entre usuarios conectados.
+- Incorporar los microservicios del sistema mediante API REST, bases de datos independientes y contenedores Docker, asegurando la persistencia del historial de conversaciones y el funcionamiento integrado de la aplicación.
+
 
 ## 🏗️ Arquitectura propuesta
 
