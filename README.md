@@ -185,18 +185,6 @@ Cada microservicio será responsable de gestionar sus propios datos. Esta separa
 
 El API Gateway y el servicio Realtime no necesitan una base de datos propia en la primera versión propuesta, ya que sus responsabilidades principales serán el enrutamiento y la distribución de eventos.
 
-## 🐳 Ejecución y contenedorización
-
-El proyecto se organizará para que cada microservicio tenga su propio directorio, código y `Dockerfile`. La configuración de Docker Compose coordinará los contenedores de la aplicación, RabbitMQ y las bases de datos necesarias.
-
-Como objetivo de configuración, se busca poder iniciar el entorno completo mediante un único comando:
-
-```bash
-docker compose up --build
-```
-
-Este comando será utilizable cuando estén preparados los Dockerfiles, la configuración de los servicios, las variables de entorno y el archivo `compose.yaml` o `docker-compose.yml`.
-
 ## 📋 Alcance de la primera versión
 
 La primera versión se centrará en establecer una base funcional para la mensajería instantánea.
