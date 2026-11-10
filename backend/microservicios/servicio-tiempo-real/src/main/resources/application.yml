@@ -1,0 +1,16 @@
+server:
+  port: ${PORT:8085}
+spring:
+  application:
+    name: servicio-tiempo-real
+  rabbitmq:
+    host: ${RABBITMQ_HOST:localhost}
+    port: ${RABBITMQ_PORT:5672}
+    username: ${RABBITMQ_USER:syncchat}
+    password: ${RABBITMQ_PASSWORD:syncchat}
+  listener:
+    simple:
+      default-requeue-rejected: false
+syncchat:
+  jwt:
+    secret: ${JWT_SECRET:syncchat-development-secret-key-change-in-production-32}
