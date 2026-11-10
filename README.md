@@ -29,10 +29,13 @@ SyncChat-/
 │   ├── microservicios/
 │   │   ├── servicio-autenticacion/
 │   │   ├── servicio-conversaciones/
-│   │   ├── servicio-chat/
+│   │   ├── servicio-tiempo-real/
 │   │   └── servicio-mensajes/
 │   ├── gateway/
 │   ├── base-datos/
+│   │   ├── usuarios/
+│   │   ├── conversaciones/
+│   │   └── mensajes/
 │   └── infraestructura/
 │       ├── postgres/
 │       ├── rabbitmq/
