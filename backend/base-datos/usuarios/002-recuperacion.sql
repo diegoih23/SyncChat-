@@ -1,0 +1,2 @@
+ALTER TABLE usuarios ADD COLUMN IF NOT EXISTS reset_token_hash VARCHAR(255);
+ALTER TABLE usuarios ADD COLUMN IF NOT EXISTS reset_token_expira TIMESTAMPTZ;

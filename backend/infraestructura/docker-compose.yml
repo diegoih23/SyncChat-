@@ -3,15 +3,19 @@ services:
     build: ../gateway
     container_name: syncchat-gateway
     ports:
-      - "8080:8080"
+      - "${GATEWAY_PORT_HOST:-8080}:8080"
     environment:
       AUTH_SERVICE_URL: http://servicio-autenticacion:8081
       CONVERSATIONS_SERVICE_URL: http://servicio-conversaciones:8082
       MESSAGES_SERVICE_URL: http://servicio-mensajes:8084
+      REALTIME_WS_URL: ws://servicio-tiempo-real:8085
+      JWT_SECRET: ${JWT_SECRET:-syncchat-development-secret-key-change-in-production-32}
+      CORS_ALLOWED_ORIGINS: ${CORS_ALLOWED_ORIGINS:-http://localhost:3000,http://localhost:5173}
     depends_on:
       - servicio-autenticacion
       - servicio-conversaciones
       - servicio-mensajes
+      - servicio-tiempo-real
 
   servicio-autenticacion:
     build: ../microservicios/servicio-autenticacion
@@ -19,6 +23,14 @@ services:
     environment:
       PORT: 8081
       DB_HOST: postgres-usuarios
+      DB_PORT: 5432
+      DB_NAME: usuarios
+      DB_USER: ${POSTGRES_USER:-syncchat}
+      DB_PASSWORD: ${POSTGRES_PASSWORD:-syncchat}
+      JWT_SECRET: ${JWT_SECRET:-syncchat-development-secret-key-change-in-production-32}
+      RABBITMQ_HOST: rabbitmq
+    ports:
+      - "${AUTH_PORT_HOST:-8081}:8081"
     depends_on:
       postgres-usuarios:
         condition: service_healthy
@@ -29,6 +41,12 @@ services:
     environment:
       PORT: 8082
       DB_HOST: postgres-conversaciones
+      DB_PORT: 5432
+      DB_NAME: conversaciones
+      DB_USER: ${POSTGRES_USER:-syncchat}
+      DB_PASSWORD: ${POSTGRES_PASSWORD:-syncchat}
+    ports:
+      - "${CONVERSACIONES_PORT_HOST:-8082}:8082"
     depends_on:
       postgres-conversaciones:
         condition: service_healthy
@@ -39,7 +57,13 @@ services:
     environment:
       PORT: 8084
       DB_HOST: postgres-mensajes
+      DB_PORT: 5432
+      DB_NAME: mensajes
+      DB_USER: ${POSTGRES_USER:-syncchat}
+      DB_PASSWORD: ${POSTGRES_PASSWORD:-syncchat}
       RABBITMQ_HOST: rabbitmq
+    ports:
+      - "${MENSAJES_PORT_HOST:-8084}:8084"
     depends_on:
       postgres-mensajes:
         condition: service_healthy
@@ -50,10 +74,13 @@ services:
     build: ../microservicios/servicio-tiempo-real
     container_name: syncchat-tiempo-real
     ports:
-      - "8085:8085"
+      - "${REALTIME_PORT_HOST:-8085}:8085"
     environment:
       PORT: 8085
       RABBITMQ_HOST: rabbitmq
+      JWT_SECRET: ${JWT_SECRET:-syncchat-development-secret-key-change-in-production-32}
+      RABBITMQ_USER: ${RABBITMQ_USER:-syncchat}
+      RABBITMQ_PASSWORD: ${RABBITMQ_PASSWORD:-syncchat}
     depends_on:
       rabbitmq:
         condition: service_healthy
@@ -66,12 +93,12 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-syncchat}
       POSTGRES_DB: usuarios
     ports:
-      - "5433:5432"
+      - "${USUARIOS_DB_PORT_HOST:-5433}:5432"
     volumes:
       - postgres-usuarios-data:/var/lib/postgresql/data
-      - ../base-datos/usuarios:/docker-entrypoint-initdb.d:ro
+      - ../base-datos/usuarios:/docker-entrypoint-initdb.d:ro,Z
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U syncchat -d usuarios"]
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER:-syncchat} -d usuarios"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -84,12 +111,12 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-syncchat}
       POSTGRES_DB: conversaciones
     ports:
-      - "5434:5432"
+      - "${CONVERSACIONES_DB_PORT_HOST:-5434}:5432"
     volumes:
       - postgres-conversaciones-data:/var/lib/postgresql/data
-      - ../base-datos/conversaciones:/docker-entrypoint-initdb.d:ro
+      - ../base-datos/conversaciones:/docker-entrypoint-initdb.d:ro,Z
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U syncchat -d conversaciones"]
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER:-syncchat} -d conversaciones"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -102,12 +129,12 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-syncchat}
       POSTGRES_DB: mensajes
     ports:
-      - "5435:5432"
+      - "${MENSAJES_DB_PORT_HOST:-5435}:5432"
     volumes:
       - postgres-mensajes-data:/var/lib/postgresql/data
-      - ../base-datos/mensajes:/docker-entrypoint-initdb.d:ro
+      - ../base-datos/mensajes:/docker-entrypoint-initdb.d:ro,Z
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U syncchat -d mensajes"]
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER:-syncchat} -d mensajes"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -119,8 +146,8 @@ services:
       RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER:-syncchat}
       RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD:-syncchat}
     ports:
-      - "5672:5672"
-      - "15672:15672"
+      - "${RABBITMQ_PORT_HOST:-5672}:5672"
+      - "${RABBITMQ_MANAGEMENT_PORT_HOST:-15672}:15672"
     volumes:
       - rabbitmq-data:/var/lib/rabbitmq
     healthcheck:
@@ -133,7 +160,7 @@ services:
     build: ../../frontend
     container_name: syncchat-frontend
     ports:
-      - "3000:80"
+      - "${FRONTEND_PORT_HOST:-3000}:80"
     depends_on:
       - gateway
       - servicio-tiempo-real
