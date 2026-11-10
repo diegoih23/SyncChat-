@@ -1,9 +1,9 @@
 import { useState } from 'react';
-import { Conversaciones } from '../funcionalidades/conversaciones/componentes/Conversaciones.jsx';
+import { Conversaciones, conversaciones } from '../funcionalidades/conversaciones/componentes/Conversaciones.jsx';
 import { Chat } from '../funcionalidades/chat/componentes/Chat.jsx';
 
 export function App() {
-  const [conversacion, setConversacion] = useState('Equipo de producto');
+  const [conversacion, setConversacion] = useState(conversaciones[0]);
   return (
     <main className="app-shell">
       <aside className="sidebar">
@@ -12,7 +12,7 @@ export function App() {
         <Conversaciones activa={conversacion} onSelect={setConversacion} />
         <div className="sidebar-footer"><span className="avatar">AM</span><span><strong>Alex Morgan</strong><small>Disponible</small></span></div>
       </aside>
-      <section className="workspace"><header className="topbar"><span className="mobile-brand">SyncChat</span><button className="profile-button">AM</button></header><Chat nombre={conversacion} /></section>
+      <section className="workspace"><header className="topbar"><span className="mobile-brand"><span className="brand-mark">S</span>SyncChat</span><button className="profile-button" aria-label="Perfil de Alex Morgan">AM</button></header><Chat conversacion={conversacion} /></section>
     </main>
   );
 }
