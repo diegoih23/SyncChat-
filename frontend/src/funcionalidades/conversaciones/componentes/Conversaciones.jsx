@@ -17,7 +17,7 @@ function iniciales(nombre = '') {
   return resultado || 'SC';
 }
 
-export function Conversaciones({ activa, onSelect, usuarioId }) {
+export function Conversaciones({ activa, onSelect, usuarioId, notificaciones = {} }) {
   const { conversaciones, invitaciones, cargando, creando, eliminandoId, error, cargar, crear, invitar, cancelar, responder, eliminar } =
     useConversaciones();
   const [mostrarFormulario, setMostrarFormulario] = useState(false);
@@ -329,6 +329,11 @@ export function Conversaciones({ activa, onSelect, usuarioId }) {
                   {iniciales(item.nombre)}
                 </span>
                 <span className="conversation-name">{item.nombre}</span>
+                {notificaciones[item.id] > 0 && (
+                  <span className="conversation-unread" aria-label={`${notificaciones[item.id]} mensaje${notificaciones[item.id] === 1 ? '' : 's'} nuevo${notificaciones[item.id] === 1 ? '' : 's'}`}>
+                    {notificaciones[item.id] > 99 ? '99+' : notificaciones[item.id]}
+                  </span>
+                )}
               </button>
               <button
                 className="conversation-delete"

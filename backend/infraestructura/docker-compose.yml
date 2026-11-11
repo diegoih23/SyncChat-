@@ -10,7 +10,7 @@ services:
       MESSAGES_SERVICE_URL: http://servicio-mensajes:8084
       REALTIME_WS_URL: ws://servicio-tiempo-real:8085
       JWT_SECRET: ${JWT_SECRET:?JWT_SECRET debe configurarse en el archivo .env}
-      CORS_ALLOWED_ORIGINS: ${CORS_ALLOWED_ORIGINS:-http://localhost:3000,http://localhost:13000,http://localhost:5173}
+      CORS_ALLOWED_ORIGINS: ${CORS_ALLOWED_ORIGINS:-http://localhost:3000,http://localhost:13000,http://localhost:5173,http://192.168.1.82:13000,http://10.20.138.26:13000}
     depends_on:
       servicio-autenticacion:
         condition: service_healthy
@@ -116,7 +116,7 @@ services:
       JWT_SECRET: ${JWT_SECRET:?JWT_SECRET debe configurarse en el archivo .env}
       RABBITMQ_USER: ${RABBITMQ_USER:?RABBITMQ_USER debe configurarse en el archivo .env}
       RABBITMQ_PASSWORD: ${RABBITMQ_PASSWORD:?RABBITMQ_PASSWORD debe configurarse en el archivo .env}
-      CORS_ALLOWED_ORIGINS: ${CORS_ALLOWED_ORIGINS:-http://localhost:3000,http://localhost:13000,http://localhost:5173}
+      CORS_ALLOWED_ORIGINS: ${CORS_ALLOWED_ORIGINS:-http://localhost:3000,http://localhost:13000,http://localhost:5173,http://192.168.1.82:13000,http://10.20.138.26:13000}
       CONVERSATIONS_AUTH_URL: http://servicio-conversaciones:8082/api/conversaciones
       AUTH_DIRECTORY_TOKEN: ${AUTH_DIRECTORY_TOKEN:?AUTH_DIRECTORY_TOKEN debe configurarse en el archivo .env}
     depends_on:

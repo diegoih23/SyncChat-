@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import { Chat } from '../../chat/componentes/Chat.jsx';
+import { useChatWebSocket } from '../../chat/hooks/useChatWebSocket.js';
 import { Conversaciones } from '../componentes/Conversaciones.jsx';
 
 function iniciales(nombre = '') {
@@ -9,6 +10,33 @@ function iniciales(nombre = '') {
 
 export function PanelConversaciones({ usuario, light, onToggleTheme, onLogout, onProfile }) {
   const [seleccionada, setSeleccionada] = useState(null);
+  const [notificaciones, setNotificaciones] = useState({});
+  const recibirNotificacion = useCallback((evento) => {
+    if (!evento?.id || !evento.conversacionId || evento.tipo === 'typing'
+      || evento.remitenteId === usuario?.id || evento.conversacionId === seleccionada?.id) return;
+    setNotificaciones((actuales) => ({
+      ...actuales,
+      [evento.conversacionId]: (actuales[evento.conversacionId] || 0) + 1,
+    }));
+  }, [seleccionada?.id, usuario?.id]);
+  useChatWebSocket({
+    onMessage: recibirNotificacion,
+    enabled: Boolean(usuario?.id),
+  });
+
+  const seleccionarConversacion = (conversacion) => {
+    if (!conversacion) {
+      setSeleccionada(null);
+      return;
+    }
+    setNotificaciones((actuales) => {
+      if (!actuales[conversacion.id]) return actuales;
+      const siguientes = { ...actuales };
+      delete siguientes[conversacion.id];
+      return siguientes;
+    });
+    setSeleccionada(conversacion);
+  };
 
   return (
     <main className={`workspace ${light ? 'light-theme' : ''}`}>
@@ -28,7 +56,12 @@ export function PanelConversaciones({ usuario, light, onToggleTheme, onLogout, o
           </button>
         </div>
 
-        <Conversaciones activa={seleccionada?.id} onSelect={setSeleccionada} usuarioId={usuario?.id} />
+        <Conversaciones
+          activa={seleccionada?.id}
+          onSelect={seleccionarConversacion}
+          usuarioId={usuario?.id}
+          notificaciones={notificaciones}
+        />
 
         <div className="workspace-user">
           <span className="avatar blue">{iniciales(usuario?.nombre)}</span>

@@ -162,17 +162,23 @@ try {
   assert.equal(outsiderEvents.filter((evento) => evento.tipo === 'typing').length, 0,
     'los indicadores de escritura no se envían a usuarios ajenos');
   const claveDirecta = randomUUID();
-  const msgDirecto = exigir(await enviar(owner.token, directo.id, 'Hola desde el grupo de dos', claveDirecta,
+  const textoEmoji = 'Hola 👋 😀 ❤️ 👍🏽 👨‍👩‍👧‍👦';
+  const msgDirecto = exigir(await enviar(owner.token, directo.id, textoEmoji, claveDirecta,
     { remitenteId: intruso.usuario.id }), 201, 'envío del chat directo');
   assert.equal(msgDirecto.remitenteId, owner.usuario.id, 'el remitente debe salir del JWT, no del JSON');
   assert.equal(msgDirecto.remitenteNombre, owner.usuario.nombre, 'la respuesta incluye el nombre registrado del remitente');
+  assert.equal(msgDirecto.contenido, textoEmoji, 'el backend conserva emojis y secuencias Unicode compuestas');
   await Promise.all([
     esperarEvento(ownerDirectEvents, msgDirecto.id, 'owner'),
     esperarEvento(aliceDirectEvents, msgDirecto.id, 'Alice'),
   ]);
   assert.equal(ownerDirectEvents.find((evento) => evento.id === msgDirecto.id)?.remitenteNombre,
     owner.usuario.nombre, 'WebSocket incluye el nombre registrado del remitente');
-  const repetido = exigir(await enviar(owner.token, directo.id, 'Hola desde el grupo de dos', claveDirecta), 201,
+  assert.equal(ownerDirectEvents.find((evento) => evento.id === msgDirecto.id)?.contenido, textoEmoji,
+    'WebSocket entrega emojis y secuencias Unicode sin alterarlos');
+  assert.equal(aliceDirectEvents.find((evento) => evento.id === msgDirecto.id)?.contenido, textoEmoji,
+    'los demás participantes reciben el texto Unicode completo');
+  const repetido = exigir(await enviar(owner.token, directo.id, textoEmoji, claveDirecta), 201,
     'reintento idempotente');
   assert.equal(repetido.id, msgDirecto.id, 'el reintento debe devolver el mismo mensaje persistido');
   await new Promise((resolver) => setTimeout(resolver, 900));
