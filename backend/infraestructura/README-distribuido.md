@@ -1,20 +1,20 @@
-# Ejecutar SyncChat en cuatro computadoras
+# Ejecutar SyncChat en tres computadoras
 
-Guía para la implementación actual con Docker. **Seguir este orden: Juan →
-Josibel → Wagner → Emilio.** Todos los comandos se ejecutan desde la raíz del
+Guía para la implementación actual con Docker. Para el despliegue de tres equipos,
+el servicio de tiempo real/WebSocket se ejecuta dentro del Compose de Juan.
+**Seguir este orden: Juan → Josibel → Wagner.** Todos los comandos se ejecutan desde la raíz del
 repositorio, donde están las carpetas `backend` y `frontend`.
 
 | Persona | Qué ejecuta |
 | --- | --- |
-| Juan | Autenticación, Gateway, frontend, RabbitMQ y PostgreSQL usuarios |
+| Juan | Autenticación, Gateway, frontend, RabbitMQ, PostgreSQL usuarios y tiempo real/WebSocket |
 | Josibel | Conversaciones y PostgreSQL conversaciones |
 | Wagner | Mensajes y PostgreSQL mensajes |
-| Emilio | Tiempo real / WebSocket, sin base de datos |
 
 No ejecutar Maven ni el Compose completo al mismo tiempo que estos archivos.
 No es necesario instalar PostgreSQL, RabbitMQ o Node en las computadoras.
 
-## 1. Preparación de los cuatro equipos
+## 1. Preparación de los tres equipos
 
 ### 1.1. Revisar las herramientas
 

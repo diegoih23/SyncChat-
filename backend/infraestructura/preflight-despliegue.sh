@@ -30,18 +30,18 @@ require_secret POSTGRES_PASSWORD 20
 require_secret RABBITMQ_PASSWORD 20
 [[ -n "${RABBITMQ_USER:-}" ]] || fallar "RABBITMQ_USER no está configurado"
 
-python3 - "$JUAN_IP" "$WAGNER_IP" "$JOSIBEL_IP" "$EMILIO_IP" <<'PY'
+python3 - "$JUAN_IP" "$WAGNER_IP" "$JOSIBEL_IP" <<'PY'
 import ipaddress, sys
 try:
     ips = [ipaddress.ip_address(value) for value in sys.argv[1:]]
 except ValueError as error:
     raise SystemExit(f"IP inválida en .env: {error}")
-if len(set(ips)) != 4:
-    raise SystemExit("Las cuatro IP deben ser distintas")
+if len(set(ips)) != 3:
+    raise SystemExit("Las tres IP deben ser distintas")
 PY
 
 cd "$ROOT"
-for nombre in local juan wagner josibel emilio; do
+for nombre in local juan wagner josibel; do
   if [[ "$nombre" == local ]]; then
     archivo="$INFRA/docker-compose.yml"
   else
