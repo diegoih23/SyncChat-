@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { crearConexionChat } from '../servicios/chatApi.js';
 import { obtenerToken } from '../../autenticacion/servicios/sesion.js';
 
@@ -17,7 +17,13 @@ export function useChatWebSocket({ onMessage, onError, enabled = true, maxDelay 
         const socket = crearConexionChat();
         socketRef.current = socket;
         socket.onopen = () => { intentoRef.current = 0; setConectado(true); };
-        socket.onmessage = (event) => onMessage?.(JSON.parse(event.data));
+        socket.onmessage = (event) => {
+          try {
+            onMessage?.(JSON.parse(event.data));
+          } catch (error) {
+            onError?.(error);
+          }
+        };
         socket.onerror = (error) => onError?.(error);
         socket.onclose = () => {
           setConectado(false);
@@ -35,9 +41,9 @@ export function useChatWebSocket({ onMessage, onError, enabled = true, maxDelay 
     };
   }, [enabled, maxDelay, onError, onMessage]);
 
-  const enviar = (mensaje) => {
+  const enviar = useCallback((mensaje) => {
     if (socketRef.current?.readyState !== WebSocket.OPEN) return false;
     socketRef.current.send(JSON.stringify(mensaje)); return true;
-  };
+  }, []);
   return { conectado, enviar };
 }

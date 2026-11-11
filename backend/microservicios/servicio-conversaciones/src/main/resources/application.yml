@@ -3,3 +3,25 @@ server:
 spring:
   application:
     name: servicio-conversaciones
+  datasource:
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5434}/${DB_NAME:conversaciones}
+    username: ${DB_USER:syncchat}
+    password: ${DB_PASSWORD:syncchat}
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
+
+syncchat:
+  jwt:
+    secret: ${JWT_SECRET:syncchat-development-secret-key-change-in-production-32}
+  auth:
+    lookup-url: ${AUTH_LOOKUP_URL:http://localhost:8080/api/auth/usuarios/buscar}
+    user-url: ${AUTH_USER_URL:http://localhost:8080/api/auth/usuarios}
+    service-token: ${AUTH_DIRECTORY_TOKEN:syncchat-directory-development-token}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info

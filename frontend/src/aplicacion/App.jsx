@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { comprobarCorreo, iniciarSesion, registrarUsuario, solicitarRecuperacion, restablecerPassword } from '../funcionalidades/autenticacion/servicios/autenticacionApi.js';
-import { guardarSesion } from '../funcionalidades/autenticacion/servicios/sesion.js';
+import { cerrarSesion, guardarSesion, obtenerToken, obtenerUsuario } from '../funcionalidades/autenticacion/servicios/sesion.js';
+import { PanelConversaciones } from '../funcionalidades/conversaciones/paginas/PanelConversaciones.jsx';
+import { Perfil } from '../funcionalidades/perfil/paginas/Perfil.jsx';
 
 const features = [
   {
@@ -85,15 +87,17 @@ function AuthFrame({ light, onToggle, onBack, kicker, title, accentTitle, descri
   </main>;
 }
 
-function Login({ light, onToggle, onBack, onRegister, onForgot }) {
+function Login({ light, onToggle, onBack, onRegister, onForgot, onAuth }) {
   const [passwordFocused, setPasswordFocused] = useState(false);
   const [correo, setCorreo] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [correoNoRegistrado, setCorreoNoRegistrado] = useState(false);
   const [cargando, setCargando] = useState(false);
   const [recordarme, setRecordarme] = useState(false);
   const submit = async (event) => {
     event.preventDefault();
+    setCorreoNoRegistrado(false);
     const correoValido = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(correo.trim());
     if (!correo.trim()) {
       setError('Ingresa tu correo electrónico.');
@@ -111,20 +115,22 @@ function Login({ light, onToggle, onBack, onRegister, onForgot }) {
     setCargando(true);
     try {
       const respuesta = await iniciarSesion({ correo, password });
-       guardarSesion(respuesta, recordarme);
-      alert(`Bienvenido, ${respuesta.usuario.nombre}`);
+      guardarSesion(respuesta, recordarme);
+      onAuth?.(respuesta.usuario);
     } catch (exception) {
-      if (exception.status === 401) {
+      if (exception.status === 401 || exception.status === 403) {
         try {
           const resultado = await comprobarCorreo(correo.trim());
           if (!resultado.registrado) {
-            setError('Correo no registrado. Te enviaremos al registro de cuenta.');
-            window.setTimeout(onRegister, 1400);
+            setCorreoNoRegistrado(true);
+            setError('Este correo no está registrado. Puedes crear una cuenta para comenzar.');
             return;
           }
         } catch {
           // Si no se puede comprobar el correo, se conserva el error de login.
         }
+        setError('El correo o la contraseña no son correctos. Revisa tus datos e inténtalo de nuevo.');
+        return;
       }
       setError(exception.message || 'No fue posible iniciar sesión.');
     } finally {
@@ -133,7 +139,7 @@ function Login({ light, onToggle, onBack, onRegister, onForgot }) {
   };
   return <AuthFrame light={light} onToggle={onToggle} onBack={onBack} kicker="BIENVENIDO A SYNCCHAT" title="Qué bueno" accentTitle="verte de nuevo." description="Inicia sesión para volver a tus conversaciones y mantener todo sincronizado." sleeping={passwordFocused}>
     <form onSubmit={submit} noValidate autoComplete="off"><h2>Iniciar sesión</h2><p className="login-subtitle">Ingresa tus datos para continuar.</p>
-      {error && <p className="auth-error" role="alert">{error}</p>}
+      {error && <div className="auth-error" role="alert"><span className="feedback-icon" aria-hidden="true">!</span><span>{error}{correoNoRegistrado && <> <button type="button" className="inline-link" onClick={onRegister}>Crear cuenta</button></>}</span></div>}
       <label htmlFor="email">Correo electrónico</label><input id="email" type="email" autoComplete="off" value={correo} onChange={(event) => setCorreo(event.target.value)} placeholder="tu correo@ejemplo.com" />
       <div className="password-label"><label htmlFor="password">Contraseña</label><button type="button" className="inline-link" onClick={onForgot}>¿La olvidaste?</button></div><input id="password" type="password" autoComplete="off" value={password} onChange={(event) => setPassword(event.target.value)} placeholder="Ingresa tu contraseña" onFocus={() => setPasswordFocused(true)} onBlur={() => setPasswordFocused(false)} />
       <label className="remember"><input type="checkbox" checked={recordarme} onChange={(event) => setRecordarme(event.target.checked)} /> <span>Recordarme en este dispositivo</span></label><button className="login-submit" type="submit" disabled={cargando}>{cargando ? 'Ingresando…' : 'Entrar a SyncChat'} <span>→</span></button>
@@ -142,26 +148,40 @@ function Login({ light, onToggle, onBack, onRegister, onForgot }) {
   </AuthFrame>;
 }
 
-function Register({ light, onToggle, onBack, onLogin }) {
+function Register({ light, onToggle, onBack, onLogin, onAuth }) {
   const [passwordFocused, setPasswordFocused] = useState(false);
   const [datos, setDatos] = useState({ nombre: '', correo: '', password: '' });
   const [confirmacion, setConfirmacion] = useState('');
+  const [aceptoTerminos, setAceptoTerminos] = useState(false);
   const [error, setError] = useState('');
   const [cargando, setCargando] = useState(false);
-  const actualizar = (campo) => (event) => setDatos({ ...datos, [campo]: event.target.value });
+  const actualizar = (campo) => (event) => {
+    setDatos((actuales) => ({ ...actuales, [campo]: event.target.value }));
+    setError('');
+  };
   const submit = async (event) => {
     event.preventDefault();
+    const nombre = datos.nombre.trim();
+    const correo = datos.correo.trim();
+    if (!nombre) { setError('Escribe tu nombre para crear la cuenta.'); return; }
+    if (nombre.length > 120) { setError('El nombre no puede superar los 120 caracteres.'); return; }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(correo)) { setError('Ingresa un correo electrónico válido.'); return; }
+    if (correo.length > 180) { setError('El correo no puede superar los 180 caracteres.'); return; }
+    if (datos.password.length < 8 || datos.password.length > 72) { setError('La contraseña debe tener entre 8 y 72 caracteres.'); return; }
     if (datos.password !== confirmacion) {
       setError('Las contraseñas no coinciden.');
+      return;
+    }
+    if (!aceptoTerminos) {
+      setError('Debes aceptar los términos y condiciones para crear la cuenta.');
       return;
     }
     setError('');
     setCargando(true);
     try {
-      const respuesta = await registrarUsuario(datos);
-       guardarSesion(respuesta);
-      alert(`Cuenta creada. Bienvenido, ${respuesta.usuario.nombre}`);
-      onLogin();
+      const respuesta = await registrarUsuario({ ...datos, nombre, correo });
+      guardarSesion(respuesta);
+      onAuth?.(respuesta.usuario);
     } catch (exception) {
       setError(exception.message || 'No fue posible crear la cuenta.');
     } finally {
@@ -169,13 +189,13 @@ function Register({ light, onToggle, onBack, onLogin }) {
     }
   };
   return <AuthFrame light={light} onToggle={onToggle} onBack={onBack} kicker="COMIENZA A CONECTAR" title="Crea tu espacio." accentTitle="empieza a compartir." description="Regístrate en SyncChat y lleva tus conversaciones a un lugar más simple." sleeping={passwordFocused}>
-    <form onSubmit={submit}><h2>Crear cuenta</h2><p className="login-subtitle">Completa tus datos para comenzar.</p>
+    <form onSubmit={submit} noValidate><h2>Crear cuenta</h2><p className="login-subtitle">Completa tus datos para comenzar.</p>
       {error && <p className="auth-error" role="alert">{error}</p>}
       <label htmlFor="name">Nombre completo</label><input id="name" type="text" value={datos.nombre} onChange={actualizar('nombre')} placeholder="Tu nombre" required />
       <label htmlFor="register-email">Correo electrónico</label><input id="register-email" type="email" value={datos.correo} onChange={actualizar('correo')} placeholder="Tu correo" required />
       <label htmlFor="register-password">Contraseña</label><input id="register-password" type="password" value={datos.password} onChange={actualizar('password')} minLength="8" placeholder="Crea una contraseña" onFocus={() => setPasswordFocused(true)} onBlur={() => setPasswordFocused(false)} required />
       <label htmlFor="confirm-password">Confirmar contraseña</label><input id="confirm-password" type="password" value={confirmacion} onChange={(event) => setConfirmacion(event.target.value)} minLength="8" placeholder="Repite tu contraseña" onFocus={() => setPasswordFocused(true)} onBlur={() => setPasswordFocused(false)} required />
-      <label className="remember"><input type="checkbox" required /> <span>Acepto los términos y condiciones</span></label><button className="login-submit" type="submit" disabled={cargando}>{cargando ? 'Creando…' : 'Crear mi cuenta'} <span>→</span></button>
+      <label className="remember"><input type="checkbox" checked={aceptoTerminos} onChange={(event) => { setAceptoTerminos(event.target.checked); setError(''); }} /> <span>Acepto los términos y condiciones</span></label><button className="login-submit" type="submit" disabled={cargando}>{cargando ? 'Creando…' : 'Crear mi cuenta'} <span>→</span></button>
       <p className="register-prompt auth-bottom-text">¿Ya tienes una cuenta? <button type="button" className="inline-link" onClick={onLogin}>Iniciar sesión</button></p>
     </form>
   </AuthFrame>;
@@ -192,6 +212,10 @@ function Recovery({ light, onToggle, onBack, onLogin, onRegister }) {
   const [cargando, setCargando] = useState(false);
   const submitStep = async (event) => {
     event.preventDefault();
+    if (step === 1 && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(correo.trim())) {
+      setError('Ingresa un correo electrónico válido.');
+      return;
+    }
     if (step === 2) {
       if (!token.trim()) { setError('Ingresa el código de recuperación.'); return; }
       setError(''); setStep(3);
@@ -230,10 +254,22 @@ function Recovery({ light, onToggle, onBack, onLogin, onRegister }) {
 
 export function App() {
   const [light, setLight] = useState(false);
-  const [vista, setVista] = useState('inicio');
+  const [usuario, setUsuario] = useState(() => obtenerUsuario());
+  const [vista, setVista] = useState(() => (obtenerToken() ? 'app' : 'inicio'));
   const authProps = { light, onToggle: () => setLight(!light), onBack: () => setVista('inicio') };
-  if (vista === 'login') return <div className={light ? 'light-theme' : ''}><Login {...authProps} onRegister={() => setVista('registro')} onForgot={() => setVista('recuperar')} /></div>;
-  if (vista === 'registro') return <div className={light ? 'light-theme' : ''}><Register {...authProps} onLogin={() => setVista('login')} /></div>;
+  const entrar = (datosUsuario) => {
+    setUsuario(datosUsuario);
+    setVista('app');
+  };
+  const salir = () => {
+    cerrarSesion();
+    setUsuario(null);
+    setVista('inicio');
+  };
+  if (vista === 'app') return <PanelConversaciones usuario={usuario} light={light} onToggleTheme={() => setLight(!light)} onLogout={salir} onProfile={() => setVista('perfil')} />;
+  if (vista === 'perfil') return <Perfil usuario={usuario} light={light} onToggleTheme={() => setLight(!light)} onBack={() => setVista('app')} onLogout={salir} />;
+  if (vista === 'login') return <div className={light ? 'light-theme' : ''}><Login {...authProps} onRegister={() => setVista('registro')} onForgot={() => setVista('recuperar')} onAuth={entrar} /></div>;
+  if (vista === 'registro') return <div className={light ? 'light-theme' : ''}><Register {...authProps} onLogin={() => setVista('login')} onAuth={entrar} /></div>;
   if (vista === 'recuperar') return <div className={light ? 'light-theme' : ''}><Recovery {...authProps} onLogin={() => setVista('login')} onRegister={() => setVista('registro')} /></div>;
   return (
     <main className={`landing-page ${light ? 'light-theme' : ''}`} id="inicio">
@@ -276,7 +312,7 @@ export function App() {
               <span className="online-count"><i /> 8 en línea</span>
             </div>
             <div className="preview-messages">
-              <div className="preview-message incoming"><span className="message-avatar avatar-purple">LM</span><div><strong>Lucía M.</strong><p>¿Listos para compartir las ideas?</p><time>10:42</time></div></div>
+              <div className="preview-message incoming"><span className="message-avatar avatar-purple">HC</span><div><strong>Harina C.</strong><p>¿Listos para compartir las ideas?</p><time>10:42</time></div></div>
               <div className="preview-message outgoing"><div><strong>Tú</strong><p>Ya tengo una propuesta. ¡La envío ahora!</p><time>10:43</time></div><span className="message-avatar avatar-coral">AM</span></div>
               <div className="typing-indicator"><span /><span /><span /> Alguien está escribiendo</div>
             </div>

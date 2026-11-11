@@ -21,6 +21,8 @@ syncchat:
     expiration-ms: ${JWT_EXPIRATION_MS:86400000}
   recovery:
     expiration-ms: ${RECOVERY_EXPIRATION_MS:900000}
+  internal:
+    service-token: ${AUTH_DIRECTORY_TOKEN:syncchat-directory-development-token}
 management:
   endpoints:
     web:
