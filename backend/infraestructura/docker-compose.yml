@@ -12,10 +12,20 @@ services:
       JWT_SECRET: ${JWT_SECRET:-syncchat-development-secret-key-change-in-production-32}
       CORS_ALLOWED_ORIGINS: ${CORS_ALLOWED_ORIGINS:-http://localhost:3000,http://localhost:5173}
     depends_on:
-      - servicio-autenticacion
-      - servicio-conversaciones
-      - servicio-mensajes
-      - servicio-tiempo-real
+      servicio-autenticacion:
+        condition: service_healthy
+      servicio-conversaciones:
+        condition: service_healthy
+      servicio-mensajes:
+        condition: service_healthy
+      servicio-tiempo-real:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://localhost:8080/actuator/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 40s
 
   servicio-autenticacion:
     build: ../microservicios/servicio-autenticacion
@@ -34,6 +44,12 @@ services:
     depends_on:
       postgres-usuarios:
         condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://localhost:8081/actuator/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 40s
 
   servicio-conversaciones:
     build: ../microservicios/servicio-conversaciones
@@ -50,6 +66,12 @@ services:
     depends_on:
       postgres-conversaciones:
         condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://localhost:8082/actuator/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 40s
 
   servicio-mensajes:
     build: ../microservicios/servicio-mensajes
@@ -69,6 +91,12 @@ services:
         condition: service_healthy
       rabbitmq:
         condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://localhost:8084/actuator/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 40s
 
   servicio-tiempo-real:
     build: ../microservicios/servicio-tiempo-real
@@ -84,6 +112,12 @@ services:
     depends_on:
       rabbitmq:
         condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://localhost:8085/actuator/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 40s
 
   postgres-usuarios:
     image: postgres:16-alpine
@@ -162,8 +196,8 @@ services:
     ports:
       - "${FRONTEND_PORT_HOST:-3000}:80"
     depends_on:
-      - gateway
-      - servicio-tiempo-real
+      gateway:
+        condition: service_healthy
 
 volumes:
   postgres-usuarios-data:

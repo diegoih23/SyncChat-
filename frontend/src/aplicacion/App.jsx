@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { comprobarCorreo, iniciarSesion, registrarUsuario, solicitarRecuperacion, restablecerPassword } from '../funcionalidades/autenticacion/servicios/autenticacionApi.js';
-import { guardarSesion } from '../funcionalidades/autenticacion/servicios/sesion.js';
+import { cerrarSesion, guardarSesion, obtenerToken, obtenerUsuario } from '../funcionalidades/autenticacion/servicios/sesion.js';
+import { PanelConversaciones } from '../funcionalidades/conversaciones/paginas/PanelConversaciones.jsx';
 
 const features = [
   {
@@ -85,7 +86,7 @@ function AuthFrame({ light, onToggle, onBack, kicker, title, accentTitle, descri
   </main>;
 }
 
-function Login({ light, onToggle, onBack, onRegister, onForgot }) {
+function Login({ light, onToggle, onBack, onRegister, onForgot, onAuth }) {
   const [passwordFocused, setPasswordFocused] = useState(false);
   const [correo, setCorreo] = useState('');
   const [password, setPassword] = useState('');
@@ -111,8 +112,8 @@ function Login({ light, onToggle, onBack, onRegister, onForgot }) {
     setCargando(true);
     try {
       const respuesta = await iniciarSesion({ correo, password });
-       guardarSesion(respuesta, recordarme);
-      alert(`Bienvenido, ${respuesta.usuario.nombre}`);
+      guardarSesion(respuesta, recordarme);
+      onAuth?.(respuesta.usuario);
     } catch (exception) {
       if (exception.status === 401) {
         try {
@@ -142,7 +143,7 @@ function Login({ light, onToggle, onBack, onRegister, onForgot }) {
   </AuthFrame>;
 }
 
-function Register({ light, onToggle, onBack, onLogin }) {
+function Register({ light, onToggle, onBack, onLogin, onAuth }) {
   const [passwordFocused, setPasswordFocused] = useState(false);
   const [datos, setDatos] = useState({ nombre: '', correo: '', password: '' });
   const [confirmacion, setConfirmacion] = useState('');
@@ -159,9 +160,8 @@ function Register({ light, onToggle, onBack, onLogin }) {
     setCargando(true);
     try {
       const respuesta = await registrarUsuario(datos);
-       guardarSesion(respuesta);
-      alert(`Cuenta creada. Bienvenido, ${respuesta.usuario.nombre}`);
-      onLogin();
+      guardarSesion(respuesta);
+      onAuth?.(respuesta.usuario);
     } catch (exception) {
       setError(exception.message || 'No fue posible crear la cuenta.');
     } finally {
@@ -230,10 +230,21 @@ function Recovery({ light, onToggle, onBack, onLogin, onRegister }) {
 
 export function App() {
   const [light, setLight] = useState(false);
-  const [vista, setVista] = useState('inicio');
+  const [usuario, setUsuario] = useState(() => obtenerUsuario());
+  const [vista, setVista] = useState(() => (obtenerToken() ? 'app' : 'inicio'));
   const authProps = { light, onToggle: () => setLight(!light), onBack: () => setVista('inicio') };
-  if (vista === 'login') return <div className={light ? 'light-theme' : ''}><Login {...authProps} onRegister={() => setVista('registro')} onForgot={() => setVista('recuperar')} /></div>;
-  if (vista === 'registro') return <div className={light ? 'light-theme' : ''}><Register {...authProps} onLogin={() => setVista('login')} /></div>;
+  const entrar = (datosUsuario) => {
+    setUsuario(datosUsuario);
+    setVista('app');
+  };
+  const salir = () => {
+    cerrarSesion();
+    setUsuario(null);
+    setVista('inicio');
+  };
+  if (vista === 'app') return <PanelConversaciones usuario={usuario} light={light} onToggleTheme={() => setLight(!light)} onLogout={salir} />;
+  if (vista === 'login') return <div className={light ? 'light-theme' : ''}><Login {...authProps} onRegister={() => setVista('registro')} onForgot={() => setVista('recuperar')} onAuth={entrar} /></div>;
+  if (vista === 'registro') return <div className={light ? 'light-theme' : ''}><Register {...authProps} onLogin={() => setVista('login')} onAuth={entrar} /></div>;
   if (vista === 'recuperar') return <div className={light ? 'light-theme' : ''}><Recovery {...authProps} onLogin={() => setVista('login')} onRegister={() => setVista('registro')} /></div>;
   return (
     <main className={`landing-page ${light ? 'light-theme' : ''}`} id="inicio">
