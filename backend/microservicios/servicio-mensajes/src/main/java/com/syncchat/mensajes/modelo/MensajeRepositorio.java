@@ -1,4 +1,4 @@
-package com.syncchat.mensajes;
+package com.syncchat.mensajes.modelo;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -9,6 +9,10 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
+/**
+ * Repositorio del modelo: encapsula el acceso a la base de datos.
+ * Única capa que conoce SQL y el mapeo de filas a objetos del modelo.
+ */
 @Repository
 public class MensajeRepositorio {
     private final JdbcTemplate jdbc;
