@@ -7,7 +7,7 @@ function iniciales(nombre = '') {
   return partes.map((parte) => parte[0]).join('').toUpperCase() || 'SC';
 }
 
-export function PanelConversaciones({ usuario, light, onToggleTheme, onLogout }) {
+export function PanelConversaciones({ usuario, light, onToggleTheme, onLogout, onProfile }) {
   const [seleccionada, setSeleccionada] = useState(null);
 
   return (
@@ -28,14 +28,14 @@ export function PanelConversaciones({ usuario, light, onToggleTheme, onLogout })
           </button>
         </div>
 
-        <Conversaciones activa={seleccionada?.id} onSelect={setSeleccionada} />
+        <Conversaciones activa={seleccionada?.id} onSelect={setSeleccionada} usuarioId={usuario?.id} />
 
         <div className="workspace-user">
           <span className="avatar blue">{iniciales(usuario?.nombre)}</span>
-          <div className="workspace-user-info">
+          <button className="workspace-user-info workspace-profile-button" type="button" onClick={onProfile} title="Ver perfil">
             <strong>{usuario?.nombre || 'Usuario'}</strong>
             <small>{usuario?.correo || ''}</small>
-          </div>
+          </button>
           <button className="logout-button" type="button" onClick={onLogout}>
             Salir
           </button>
@@ -44,7 +44,7 @@ export function PanelConversaciones({ usuario, light, onToggleTheme, onLogout })
 
       <section className="workspace-main">
         {seleccionada ? (
-          <Chat key={seleccionada.id} nombre={seleccionada.nombre} />
+          <Chat key={seleccionada.id} conversacion={seleccionada} usuario={usuario} />
         ) : (
           <div className="workspace-welcome">
             <span className="workspace-welcome-icon">✦</span>

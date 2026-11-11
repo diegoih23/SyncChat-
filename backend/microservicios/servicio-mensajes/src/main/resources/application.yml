@@ -13,3 +13,9 @@ spring:
     port: ${RABBITMQ_PORT:5672}
     username: ${RABBITMQ_USER:syncchat}
     password: ${RABBITMQ_PASSWORD:syncchat}
+syncchat:
+  jwt:
+    secret: ${JWT_SECRET:syncchat-development-secret-key-change-in-production-32}
+  conversaciones:
+    participantes-url: ${CONVERSATIONS_AUTH_URL:http://localhost:8082/api/conversaciones}
+    service-token: ${AUTH_DIRECTORY_TOKEN:syncchat-directory-development-token}

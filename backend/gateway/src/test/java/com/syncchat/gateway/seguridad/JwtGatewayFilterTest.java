@@ -21,4 +21,30 @@ class JwtGatewayFilterTest {
         assertEquals(HttpStatus.UNAUTHORIZED, exchange.getResponse().getStatusCode());
         verifyNoInteractions(chain);
     }
+
+    @Test
+    void rechazaLaBusquedaDeUsuariosSinToken() {
+        JwtGatewayFilter filtro = new JwtGatewayFilter("syncchat-test-secret-key-with-at-least-32-bytes");
+        GatewayFilterChain chain = mock(GatewayFilterChain.class);
+        ServerWebExchange exchange = MockServerWebExchange.from(
+                MockServerHttpRequest.get("/api/auth/usuarios/buscar?correo=ana@example.com").build());
+
+        filtro.filter(exchange, chain).block();
+
+        assertEquals(HttpStatus.UNAUTHORIZED, exchange.getResponse().getStatusCode());
+        verifyNoInteractions(chain);
+    }
+
+    @Test
+    void requiereJwtParaBuscarContactos() {
+        JwtGatewayFilter filtro = new JwtGatewayFilter("syncchat-test-secret-key-with-at-least-32-bytes");
+        GatewayFilterChain chain = mock(GatewayFilterChain.class);
+        ServerWebExchange exchange = MockServerWebExchange.from(
+                MockServerHttpRequest.get("/api/auth/contactos/buscar?consulta=ana").build());
+
+        filtro.filter(exchange, chain).block();
+
+        assertEquals(HttpStatus.UNAUTHORIZED, exchange.getResponse().getStatusCode());
+        verifyNoInteractions(chain);
+    }
 }

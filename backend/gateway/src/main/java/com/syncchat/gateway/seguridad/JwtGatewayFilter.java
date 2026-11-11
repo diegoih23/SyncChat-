@@ -31,7 +31,10 @@ public class JwtGatewayFilter implements GlobalFilter, Ordered {
     }
     private boolean requiereToken(String path) {
         return path.startsWith("/api/conversaciones/") || path.equals("/api/conversaciones")
-                || path.startsWith("/api/mensajes/") || path.equals("/api/mensajes");
+                || path.startsWith("/api/mensajes/") || path.equals("/api/mensajes")
+                || path.equals("/api/auth/usuarios/buscar")
+                || path.startsWith("/api/auth/usuarios/")
+                || path.equals("/api/auth/contactos/buscar");
     }
     private boolean valido(String token) {
         try { Jwts.parser().verifyWith(key).build().parseSignedClaims(token); return true; }

@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.UUID;
+import java.util.Optional;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -24,7 +25,13 @@ public class MensajeRepositorio {
         // RETURNING devuelve el registro ya guardado, incluida su fecha.
         return jdbc.queryForObject(
                 "INSERT INTO mensajes (id, conversacion_id, remitente_id, contenido) VALUES (?, ?, ?, ?) RETURNING id, conversacion_id, remitente_id, contenido, creado_en",
-                filaMensaje, UUID.randomUUID(), nuevo.conversacionId(), nuevo.remitenteId(), nuevo.contenido().trim());
+                filaMensaje, nuevo.idempotencyKey() == null ? UUID.randomUUID() : nuevo.idempotencyKey(),
+                nuevo.conversacionId(), nuevo.remitenteId(), nuevo.contenido().trim());
+    }
+
+    public Optional<Mensaje> buscarPorId(UUID id) {
+        return jdbc.query("SELECT id, conversacion_id, remitente_id, contenido, creado_en FROM mensajes WHERE id = ?",
+                filaMensaje, id).stream().findFirst();
     }
 
     public List<Mensaje> buscarPorConversacion(UUID conversacionId) {

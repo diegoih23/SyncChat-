@@ -9,6 +9,7 @@ import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.server.ResponseStatusException;
 
 @RestControllerAdvice
 public class ErroresController {
@@ -21,6 +22,10 @@ public class ErroresController {
     @ExceptionHandler(HttpMessageNotReadableException.class)
     ResponseEntity<Map<String, Object>> jsonInvalido() {
         return respuesta(HttpStatus.BAD_REQUEST, "Revisa el formato de los datos enviados", null);
+    }
+    @ExceptionHandler(ResponseStatusException.class)
+    ResponseEntity<Map<String, Object>> estadoHttp(ResponseStatusException ex) {
+        return respuesta(HttpStatus.valueOf(ex.getStatusCode().value()), ex.getReason(), null);
     }
     @ExceptionHandler(Exception.class)
     ResponseEntity<Map<String, Object>> inesperado() {

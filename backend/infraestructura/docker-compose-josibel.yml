@@ -1,0 +1,17 @@
+services:
+  postgres-conversaciones:
+    extends:
+      file: docker-compose.yml
+      service: postgres-conversaciones
+
+  servicio-conversaciones:
+    extends:
+      file: docker-compose.yml
+      service: servicio-conversaciones
+    environment:
+      JWT_SECRET: ${JWT_SECRET:?JWT_SECRET debe configurarse en el archivo .env}
+      AUTH_LOOKUP_URL: http://${JUAN_IP:-192.168.1.10}:8080/api/auth/usuarios/buscar
+      AUTH_USER_URL: http://${JUAN_IP:-192.168.1.10}:8080/api/auth/usuarios
+
+volumes:
+  postgres-conversaciones-data:

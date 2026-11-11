@@ -9,8 +9,8 @@ services:
       CONVERSATIONS_SERVICE_URL: http://servicio-conversaciones:8082
       MESSAGES_SERVICE_URL: http://servicio-mensajes:8084
       REALTIME_WS_URL: ws://servicio-tiempo-real:8085
-      JWT_SECRET: ${JWT_SECRET:-syncchat-development-secret-key-change-in-production-32}
-      CORS_ALLOWED_ORIGINS: ${CORS_ALLOWED_ORIGINS:-http://localhost:3000,http://localhost:5173}
+      JWT_SECRET: ${JWT_SECRET:?JWT_SECRET debe configurarse en el archivo .env}
+      CORS_ALLOWED_ORIGINS: ${CORS_ALLOWED_ORIGINS:-http://localhost:3000,http://localhost:13000,http://localhost:5173}
     depends_on:
       servicio-autenticacion:
         condition: service_healthy
@@ -35,12 +35,11 @@ services:
       DB_HOST: postgres-usuarios
       DB_PORT: 5432
       DB_NAME: usuarios
-      DB_USER: ${POSTGRES_USER:-syncchat}
-      DB_PASSWORD: ${POSTGRES_PASSWORD:-syncchat}
-      JWT_SECRET: ${JWT_SECRET:-syncchat-development-secret-key-change-in-production-32}
+      DB_USER: ${POSTGRES_USER:?POSTGRES_USER debe configurarse en el archivo .env}
+      DB_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD debe configurarse en el archivo .env}
+      JWT_SECRET: ${JWT_SECRET:?JWT_SECRET debe configurarse en el archivo .env}
+      AUTH_DIRECTORY_TOKEN: ${AUTH_DIRECTORY_TOKEN:?AUTH_DIRECTORY_TOKEN debe configurarse en el archivo .env}
       RABBITMQ_HOST: rabbitmq
-    ports:
-      - "${AUTH_PORT_HOST:-8081}:8081"
     depends_on:
       postgres-usuarios:
         condition: service_healthy
@@ -59,8 +58,11 @@ services:
       DB_HOST: postgres-conversaciones
       DB_PORT: 5432
       DB_NAME: conversaciones
-      DB_USER: ${POSTGRES_USER:-syncchat}
-      DB_PASSWORD: ${POSTGRES_PASSWORD:-syncchat}
+      DB_USER: ${POSTGRES_USER:?POSTGRES_USER debe configurarse en el archivo .env}
+      DB_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD debe configurarse en el archivo .env}
+      AUTH_LOOKUP_URL: http://gateway:8080/api/auth/usuarios/buscar
+      AUTH_USER_URL: http://gateway:8080/api/auth/usuarios
+      AUTH_DIRECTORY_TOKEN: ${AUTH_DIRECTORY_TOKEN:?AUTH_DIRECTORY_TOKEN debe configurarse en el archivo .env}
     ports:
       - "${CONVERSACIONES_PORT_HOST:-8082}:8082"
     depends_on:
@@ -81,15 +83,20 @@ services:
       DB_HOST: postgres-mensajes
       DB_PORT: 5432
       DB_NAME: mensajes
-      DB_USER: ${POSTGRES_USER:-syncchat}
-      DB_PASSWORD: ${POSTGRES_PASSWORD:-syncchat}
+      DB_USER: ${POSTGRES_USER:?POSTGRES_USER debe configurarse en el archivo .env}
+      DB_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD debe configurarse en el archivo .env}
       RABBITMQ_HOST: rabbitmq
+      JWT_SECRET: ${JWT_SECRET:?JWT_SECRET debe configurarse en el archivo .env}
+      AUTH_DIRECTORY_TOKEN: ${AUTH_DIRECTORY_TOKEN:?AUTH_DIRECTORY_TOKEN debe configurarse en el archivo .env}
+      CONVERSATIONS_AUTH_URL: http://servicio-conversaciones:8082/api/conversaciones
     ports:
       - "${MENSAJES_PORT_HOST:-8084}:8084"
     depends_on:
       postgres-mensajes:
         condition: service_healthy
       rabbitmq:
+        condition: service_healthy
+      servicio-conversaciones:
         condition: service_healthy
     healthcheck:
       test: ["CMD", "curl", "-fsS", "http://localhost:8084/actuator/health"]
@@ -106,11 +113,16 @@ services:
     environment:
       PORT: 8085
       RABBITMQ_HOST: rabbitmq
-      JWT_SECRET: ${JWT_SECRET:-syncchat-development-secret-key-change-in-production-32}
-      RABBITMQ_USER: ${RABBITMQ_USER:-syncchat}
-      RABBITMQ_PASSWORD: ${RABBITMQ_PASSWORD:-syncchat}
+      JWT_SECRET: ${JWT_SECRET:?JWT_SECRET debe configurarse en el archivo .env}
+      RABBITMQ_USER: ${RABBITMQ_USER:?RABBITMQ_USER debe configurarse en el archivo .env}
+      RABBITMQ_PASSWORD: ${RABBITMQ_PASSWORD:?RABBITMQ_PASSWORD debe configurarse en el archivo .env}
+      CORS_ALLOWED_ORIGINS: ${CORS_ALLOWED_ORIGINS:-http://localhost:3000,http://localhost:13000,http://localhost:5173}
+      CONVERSATIONS_AUTH_URL: http://servicio-conversaciones:8082/api/conversaciones
+      AUTH_DIRECTORY_TOKEN: ${AUTH_DIRECTORY_TOKEN:?AUTH_DIRECTORY_TOKEN debe configurarse en el archivo .env}
     depends_on:
       rabbitmq:
+        condition: service_healthy
+      servicio-conversaciones:
         condition: service_healthy
     healthcheck:
       test: ["CMD", "curl", "-fsS", "http://localhost:8085/actuator/health"]
@@ -123,11 +135,9 @@ services:
     image: postgres:16-alpine
     container_name: syncchat-postgres-usuarios
     environment:
-      POSTGRES_USER: ${POSTGRES_USER:-syncchat}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-syncchat}
+      POSTGRES_USER: ${POSTGRES_USER:?POSTGRES_USER debe configurarse en el archivo .env}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD debe configurarse en el archivo .env}
       POSTGRES_DB: usuarios
-    ports:
-      - "${USUARIOS_DB_PORT_HOST:-5433}:5432"
     volumes:
       - postgres-usuarios-data:/var/lib/postgresql/data
       - ../base-datos/usuarios:/docker-entrypoint-initdb.d:ro,Z
@@ -141,11 +151,9 @@ services:
     image: postgres:16-alpine
     container_name: syncchat-postgres-conversaciones
     environment:
-      POSTGRES_USER: ${POSTGRES_USER:-syncchat}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-syncchat}
+      POSTGRES_USER: ${POSTGRES_USER:?POSTGRES_USER debe configurarse en el archivo .env}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD debe configurarse en el archivo .env}
       POSTGRES_DB: conversaciones
-    ports:
-      - "${CONVERSACIONES_DB_PORT_HOST:-5434}:5432"
     volumes:
       - postgres-conversaciones-data:/var/lib/postgresql/data
       - ../base-datos/conversaciones:/docker-entrypoint-initdb.d:ro,Z
@@ -159,11 +167,9 @@ services:
     image: postgres:16-alpine
     container_name: syncchat-postgres-mensajes
     environment:
-      POSTGRES_USER: ${POSTGRES_USER:-syncchat}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-syncchat}
+      POSTGRES_USER: ${POSTGRES_USER:?POSTGRES_USER debe configurarse en el archivo .env}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD debe configurarse en el archivo .env}
       POSTGRES_DB: mensajes
-    ports:
-      - "${MENSAJES_DB_PORT_HOST:-5435}:5432"
     volumes:
       - postgres-mensajes-data:/var/lib/postgresql/data
       - ../base-datos/mensajes:/docker-entrypoint-initdb.d:ro,Z
@@ -177,11 +183,8 @@ services:
     image: rabbitmq:3.13-management-alpine
     container_name: syncchat-rabbitmq
     environment:
-      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER:-syncchat}
-      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD:-syncchat}
-    ports:
-      - "${RABBITMQ_PORT_HOST:-5672}:5672"
-      - "${RABBITMQ_MANAGEMENT_PORT_HOST:-15672}:15672"
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER:?RABBITMQ_USER debe configurarse en el archivo .env}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD:?RABBITMQ_PASSWORD debe configurarse en el archivo .env}
     volumes:
       - rabbitmq-data:/var/lib/rabbitmq
     healthcheck:

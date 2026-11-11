@@ -1,0 +1,36 @@
+services:
+  postgres-mensajes:
+    extends:
+      file: docker-compose.yml
+      service: postgres-mensajes
+
+  servicio-mensajes:
+    build: ../microservicios/servicio-mensajes
+    ports:
+      - "8084:8084"
+    environment:
+      PORT: 8084
+      DB_HOST: postgres-mensajes
+      DB_PORT: 5432
+      DB_NAME: mensajes
+      DB_USER: ${POSTGRES_USER:?POSTGRES_USER debe configurarse en el archivo .env}
+      DB_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD debe configurarse en el archivo .env}
+      RABBITMQ_HOST: ${JUAN_IP:-192.168.1.10}
+      RABBITMQ_PORT: 5672
+      RABBITMQ_USER: ${RABBITMQ_USER:?RABBITMQ_USER debe configurarse en el archivo .env}
+      RABBITMQ_PASSWORD: ${RABBITMQ_PASSWORD:?RABBITMQ_PASSWORD debe configurarse en el archivo .env}
+      JWT_SECRET: ${JWT_SECRET:?JWT_SECRET debe configurarse en el archivo .env}
+      AUTH_DIRECTORY_TOKEN: ${AUTH_DIRECTORY_TOKEN:?AUTH_DIRECTORY_TOKEN debe configurarse en el archivo .env}
+      CONVERSATIONS_AUTH_URL: http://${JOSIBEL_IP:-192.168.1.12}:8082/api/conversaciones
+    depends_on:
+      postgres-mensajes:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://localhost:8084/actuator/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 40s
+
+volumes:
+  postgres-mensajes-data:

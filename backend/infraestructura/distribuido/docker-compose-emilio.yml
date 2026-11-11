@@ -1,0 +1,15 @@
+services:
+  servicio-tiempo-real:
+    build: ../../microservicios/servicio-tiempo-real
+    container_name: syncchat-tiempo-real
+    ports: ["8085:8085"]
+    environment:
+      PORT: 8085
+      RABBITMQ_HOST: ${JUAN_IP}
+      RABBITMQ_PORT: 5672
+      RABBITMQ_USER: ${RABBITMQ_USER}
+      RABBITMQ_PASSWORD: ${RABBITMQ_PASSWORD}
+      JWT_SECRET: ${JWT_SECRET}
+      CONVERSATIONS_AUTH_URL: http://${JOSIBEL_IP:-192.168.1.12}:8082/api/conversaciones
+      AUTH_DIRECTORY_TOKEN: ${AUTH_DIRECTORY_TOKEN:?AUTH_DIRECTORY_TOKEN debe configurarse en el archivo .env}
+    depends_on: []

@@ -23,6 +23,17 @@ public class MensajeServicio {
         if (nuevo.conversacionId() == null || nuevo.remitenteId() == null || nuevo.contenido() == null || nuevo.contenido().isBlank()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "conversacionId, remitenteId y contenido son obligatorios");
         }
+        if (nuevo.idempotencyKey() != null) {
+            var existente = repositorio.buscarPorId(nuevo.idempotencyKey());
+            if (existente.isPresent()) {
+                Mensaje mensaje = existente.get();
+                if (mensaje.conversacionId().equals(nuevo.conversacionId())
+                        && mensaje.remitenteId().equals(nuevo.remitenteId())
+                        && mensaje.contenido().equals(nuevo.contenido().trim())) return mensaje;
+                throw new ResponseStatusException(HttpStatus.CONFLICT,
+                        "La clave de idempotencia ya fue usada para otro mensaje");
+            }
+        }
         return repositorio.guardar(nuevo);
     }
 

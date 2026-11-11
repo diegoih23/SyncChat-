@@ -16,6 +16,8 @@ public class Conversacion {
     private String nombre;
     @Column(name = "creado_por", nullable = false)
     private UUID creadoPor;
+    @Column(name = "destinatario_id")
+    private UUID destinatarioId;
     @Column(name = "creado_en", nullable = false)
     private Instant creadoEn;
 
@@ -28,8 +30,14 @@ public class Conversacion {
         this.creadoEn = creadoEn;
     }
 
+    public Conversacion(UUID id, String nombre, UUID creadoPor, UUID destinatarioId, Instant creadoEn) {
+        this(id, nombre, creadoPor, creadoEn);
+        this.destinatarioId = destinatarioId;
+    }
+
     public UUID getId() { return id; }
     public String getNombre() { return nombre; }
     public UUID getCreadoPor() { return creadoPor; }
+    public UUID getDestinatarioId() { return destinatarioId; }
     public Instant getCreadoEn() { return creadoEn; }
 }
