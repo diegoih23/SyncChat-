@@ -6,15 +6,28 @@ spring:
   cloud:
     gateway:
       routes:
+        - id: tiempo-real-websocket
+          uri: ${REALTIME_WS_URL:ws://localhost:8085}
+          predicates: [Path=/ws/mensajes/**]
         - id: autenticacion
           uri: ${AUTH_SERVICE_URL:http://localhost:8081}
           predicates: [Path=/api/auth/**]
+          filters: [StripPrefix=2]
         - id: conversaciones
           uri: ${CONVERSATIONS_SERVICE_URL:http://localhost:8082}
           predicates: [Path=/api/conversaciones/**]
-        - id: chat
-          uri: ${CHAT_SERVICE_URL:http://localhost:8083}
-          predicates: [Path=/api/chat/**]
         - id: mensajes
           uri: ${MESSAGES_SERVICE_URL:http://localhost:8084}
           predicates: [Path=/api/mensajes/**]
+
+syncchat:
+  jwt:
+    secret: ${JWT_SECRET:syncchat-development-secret-key-change-in-production-32}
+  cors:
+    allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:3000,http://localhost:13000,http://localhost:5173,http://192.168.1.82:13000,http://10.20.138.26:13000}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info

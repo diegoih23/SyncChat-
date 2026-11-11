@@ -1,0 +1,39 @@
+services:
+  postgres-mensajes:
+    image: postgres:16-alpine
+    container_name: syncchat-postgres-mensajes
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: mensajes
+    ports: ["5435:5432"]
+    volumes:
+      - postgres-mensajes-data:/var/lib/postgresql/data
+      - ../../base-datos/mensajes:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d mensajes"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  servicio-mensajes:
+    build: ../../microservicios/servicio-mensajes
+    container_name: syncchat-mensajes
+    environment:
+      PORT: 8084
+      DB_HOST: postgres-mensajes
+      DB_PORT: 5432
+      DB_NAME: mensajes
+      DB_USER: ${POSTGRES_USER}
+      DB_PASSWORD: ${POSTGRES_PASSWORD}
+      RABBITMQ_HOST: ${JUAN_IP}
+      RABBITMQ_PORT: 5672
+      RABBITMQ_USER: ${RABBITMQ_USER}
+      RABBITMQ_PASSWORD: ${RABBITMQ_PASSWORD}
+    ports: ["8084:8084"]
+    depends_on:
+      postgres-mensajes:
+        condition: service_healthy
+
+volumes:
+  postgres-mensajes-data:
