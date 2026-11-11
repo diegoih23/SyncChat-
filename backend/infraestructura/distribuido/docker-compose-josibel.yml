@@ -1,0 +1,36 @@
+services:
+  postgres-conversaciones:
+    image: postgres:16-alpine
+    container_name: syncchat-postgres-conversaciones
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: conversaciones
+    ports: ["5434:5432"]
+    volumes:
+      - postgres-conversaciones-data:/var/lib/postgresql/data
+      - ../../base-datos/conversaciones:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d conversaciones"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  servicio-conversaciones:
+    build: ../../microservicios/servicio-conversaciones
+    container_name: syncchat-conversaciones
+    environment:
+      PORT: 8082
+      DB_HOST: postgres-conversaciones
+      DB_PORT: 5432
+      DB_NAME: conversaciones
+      DB_USER: ${POSTGRES_USER}
+      DB_PASSWORD: ${POSTGRES_PASSWORD}
+      JWT_SECRET: ${JWT_SECRET}
+    ports: ["8082:8082"]
+    depends_on:
+      postgres-conversaciones:
+        condition: service_healthy
+
+volumes:
+  postgres-conversaciones-data:

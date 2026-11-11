@@ -1,0 +1,137 @@
+<mxGraphModel dx="2886" dy="1567" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+  <root>
+    <mxCell id="0" />
+    <mxCell id="1" parent="0" />
+    <mxCell id="Fvqgt8j2kgwH2tz2cn6K-2" parent="1" style="rounded=1;whiteSpace=wrap;html=1;verticalAlign=top;fontStyle=1;fontSize=14;fillColor=#F4FAF1;strokeColor=#82B366;strokeWidth=2;arcSize=3;" value="BACKEND&amp;nbsp;" vertex="1">
+      <mxGeometry height="230" width="870" x="920" y="576" as="geometry" />
+    </mxCell>
+    <mxCell id="Fvqgt8j2kgwH2tz2cn6K-1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;verticalAlign=top;fontStyle=1;fontSize=14;fillColor=#F4FAF1;strokeColor=#82B366;strokeWidth=2;arcSize=3;" value="BACKEND" vertex="1">
+      <mxGeometry height="230" width="870" x="920" y="305" as="geometry" />
+    </mxCell>
+    <mxCell id="t" parent="1" style="text;html=1;align=center;verticalAlign=middle;fontSize=28;fontStyle=1;fontColor=#17365D;" value="SYNCCHAT" vertex="1">
+      <mxGeometry height="40" width="900" x="254" y="40" as="geometry" />
+    </mxCell>
+    <mxCell id="zClient" parent="1" style="rounded=1;whiteSpace=wrap;html=1;verticalAlign=top;fontStyle=1;fontSize=14;fillColor=#EAF1FB;strokeColor=#6C8EBF;arcSize=4;strokeWidth=3;" value="CLIENTE" vertex="1">
+      <mxGeometry height="680" width="240" x="60" y="140" as="geometry" />
+    </mxCell>
+    <mxCell id="zGw" parent="1" style="rounded=1;whiteSpace=wrap;html=1;verticalAlign=top;fontStyle=1;fontSize=14;fillColor=#FFF8E1;strokeColor=#D6B656;arcSize=4;strokeWidth=3;" value="ENTRADA" vertex="1">
+      <mxGeometry height="680" width="240" x="360" y="140" as="geometry" />
+    </mxCell>
+    <mxCell id="zBack" parent="1" style="rounded=1;whiteSpace=wrap;html=1;verticalAlign=top;fontStyle=1;fontSize=14;fillColor=#F4FAF1;strokeColor=#82B366;strokeWidth=2;arcSize=3;" value="BACKEND (cada bloque corre en su propio contenedor Docker)" vertex="1">
+      <mxGeometry height="230" width="870" x="920" y="25" as="geometry" />
+    </mxCell>
+    <mxCell id="react" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#6C8EBF;strokeWidth=2;fontSize=13;" value="&lt;br&gt;&lt;b&gt;FRONTEND&lt;/b&gt;&lt;br&gt;React&lt;br&gt;&lt;font style=&quot;font-size:11px&quot;&gt;Login · Lista de chats · Historial · Chat en vivo&lt;/font&gt;" vertex="1">
+      <mxGeometry height="120" width="200" x="70" y="355" as="geometry" />
+    </mxCell>
+    <mxCell id="gateway" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#D6B656;strokeWidth=2;fontSize=13;" value="&lt;br&gt;&lt;b&gt;API GATEWAY&lt;/b&gt;&lt;br&gt;Spring Cloud Gateway&lt;br&gt;&lt;font style=&quot;font-size:11px&quot;&gt;Recibe y enruta las solicitudes REST&lt;/font&gt;" vertex="1">
+      <mxGeometry height="120" width="200" x="380" y="360" as="geometry" />
+    </mxCell>
+    <mxCell id="users" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#82B366;strokeWidth=2;fontSize=13;" value="&lt;b&gt;&amp;nbsp;USUARIOS&lt;/b&gt;&lt;br&gt;Java + Spring Boot&lt;br&gt;&lt;font style=&quot;font-size:11px&quot;&gt;Registro, autenticación, perfiles&lt;/font&gt;" vertex="1">
+      <mxGeometry height="110" width="260" x="941" y="106" as="geometry" />
+    </mxCell>
+    <mxCell id="conversations" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#82B366;strokeWidth=2;fontSize=13;" value="&lt;b&gt;CONVERSACIONES&lt;/b&gt;&lt;br&gt;Java + Spring Boot&lt;br&gt;&lt;font style=&quot;font-size:11px&quot;&gt;Crear chats, participantes, consultas&lt;/font&gt;" vertex="1">
+      <mxGeometry height="110" width="260" x="941" y="370" as="geometry" />
+    </mxCell>
+    <mxCell id="messages" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#82B366;strokeWidth=2;fontSize=13;" value="&lt;b&gt;MENSAJES&lt;/b&gt;&lt;br&gt;Java + Spring Boot&lt;br&gt;&lt;font style=&quot;font-size:11px&quot;&gt;Guarda mensajes, historial, publica eventos&lt;/font&gt;" vertex="1">
+      <mxGeometry height="110" width="260" x="941" y="628" as="geometry" />
+    </mxCell>
+    <mxCell id="dbusers" parent="1" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;fillColor=#DAE8FC;strokeColor=#6C8EBF;strokeWidth=2;fontSize=13;" value="&lt;b&gt;PostgreSQL&lt;/b&gt;&lt;br&gt;BD Usuarios&lt;br&gt;&lt;font style=&quot;font-size:11px&quot;&gt;cuentas y perfiles&lt;/font&gt;" vertex="1">
+      <mxGeometry height="130" width="200" x="1521" y="116" as="geometry" />
+    </mxCell>
+    <mxCell id="dbconv" parent="1" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;fillColor=#DAE8FC;strokeColor=#6C8EBF;strokeWidth=2;fontSize=13;" value="&lt;b&gt;PostgreSQL&lt;/b&gt;&lt;br&gt;BD Conversaciones&lt;br&gt;&lt;font style=&quot;font-size:11px&quot;&gt;chats y participantes&lt;/font&gt;" vertex="1">
+      <mxGeometry height="130" width="200" x="1550" y="384" as="geometry" />
+    </mxCell>
+    <mxCell id="dbmsg" parent="1" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;fillColor=#DAE8FC;strokeColor=#6C8EBF;strokeWidth=2;fontSize=13;" value="&lt;b&gt;PostgreSQL&lt;/b&gt;&lt;br&gt;BD Mensajes&lt;br&gt;&lt;font style=&quot;font-size:11px&quot;&gt;contenido e historial&lt;/font&gt;" vertex="1">
+      <mxGeometry height="130" width="200" x="1560" y="586" as="geometry" />
+    </mxCell>
+    <mxCell id="rabbit" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F8CECC;strokeColor=#B85450;strokeWidth=2;fontSize=13;" value="&lt;b&gt;&amp;nbsp;RABBITMQ&lt;/b&gt;&lt;br&gt;Exchange: chat.events&lt;br&gt;Cola: chat.message.created&lt;br&gt;&lt;font style=&quot;font-size:11px&quot;&gt;AMQP · puerto 5672&lt;/font&gt;" vertex="1">
+      <mxGeometry height="110" width="260" x="750" y="911" as="geometry" />
+    </mxCell>
+    <mxCell id="realtime" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E1D5E7;strokeColor=#9673A6;strokeWidth=2;fontSize=13;" value="&lt;b&gt;&amp;nbsp;WebSocket (Tiempo Real)&lt;/b&gt;&lt;br&gt;Java + Spring Boot&lt;br&gt;&lt;font style=&quot;font-size:11px&quot;&gt;Consume eventos y los entrega por WebSocket a usuarios conectados&lt;/font&gt;" vertex="1">
+      <mxGeometry height="110" width="260" x="1290" y="923" as="geometry" />
+    </mxCell>
+    <mxCell id="flow" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF2CC;strokeColor=#D6B656;fontSize=12;spacing=10;align=left;verticalAlign=top;strokeWidth=2;" value="&lt;b&gt;FLUJO DE UN MENSAJE&lt;/b&gt;&lt;br&gt;&lt;div style=&quot;text-align:left&quot;&gt;① React envía el mensaje por REST.&lt;br&gt;② Gateway lo enruta a Mensajes.&lt;br&gt;③ Mensajes lo guarda en su BD.&lt;br&gt;④ Mensajes publica un evento en RabbitMQ.&lt;br&gt;⑤ Tiempo Real consume el evento.&lt;br&gt;⑥ WebSocket lo entrega al destinatario.&lt;/div&gt;" vertex="1">
+      <mxGeometry height="200" width="330" x="2330" y="336" as="geometry" />
+    </mxCell>
+    <mxCell id="protocols" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F3F3F3;strokeColor=#777777;fontSize=12;spacing=10;align=left;verticalAlign=top;strokeWidth=2;" value="&lt;b&gt;PROTOCOLOS&lt;/b&gt;&lt;br&gt;&lt;div style=&quot;text-align:left&quot;&gt;REST: HTTP/HTTPS sobre TCP&lt;br&gt;Tiempo real: WS/WSS sobre TCP&lt;br&gt;Eventos: AMQP sobre TCP&lt;br&gt;Base de datos: JDBC sobre TCP&lt;/div&gt;" vertex="1">
+      <mxGeometry height="140" width="330" x="2330" y="576" as="geometry" />
+    </mxCell>
+    <mxCell id="docker" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E1D5E7;strokeColor=#9673A6;fontSize=12;spacing=8;" value="&lt;b&gt;&amp;nbsp;DESPLIEGUE&lt;/b&gt;&lt;br&gt;Docker Compose (docker-compose.yml)&lt;br&gt;&lt;font style=&quot;font-size:11px&quot;&gt;Contenedores separados: Gateway, microservicios, RabbitMQ, bases de datos y frontend&lt;/font&gt;" vertex="1">
+      <mxGeometry height="80" width="330" x="2330" y="746" as="geometry" />
+    </mxCell>
+    <mxCell id="e1" edge="1" parent="1" source="react" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#1A73E8;strokeWidth=2;endArrow=block;endFill=1;fontSize=12;fontStyle=1;fontColor=#1A73E8;labelBackgroundColor=#FFFFFF;" target="gateway" value="① REST / HTTPS">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+    <mxCell id="e2" edge="1" parent="1" source="gateway" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#1A73E8;strokeWidth=2;endArrow=block;endFill=1;fontSize=11;fontColor=#1A73E8;labelBackgroundColor=#FFFFFF;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="users" value="REST">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+    <mxCell id="e3" edge="1" parent="1" source="gateway" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#1A73E8;strokeWidth=2;endArrow=block;endFill=1;fontSize=11;fontColor=#1A73E8;labelBackgroundColor=#FFFFFF;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="conversations" value="REST">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+    <mxCell id="e4" edge="1" parent="1" source="gateway" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#1A73E8;strokeWidth=2;endArrow=block;endFill=1;fontSize=11;fontStyle=1;fontColor=#1A73E8;labelBackgroundColor=#FFFFFF;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="messages" value="② REST">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+    <mxCell id="d1" edge="1" parent="1" source="users" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#777777;strokeWidth=2;dashed=1;endArrow=none;fontSize=11;labelBackgroundColor=#FFFFFF;" target="dbusers" value="JDBC">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+    <mxCell id="d2" edge="1" parent="1" source="conversations" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#777777;strokeWidth=2;dashed=1;endArrow=none;fontSize=11;labelBackgroundColor=#FFFFFF;" target="dbconv" value="JDBC">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+    <mxCell id="d3" edge="1" parent="1" source="messages" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#777777;strokeWidth=2;dashed=1;endArrow=none;fontSize=11;fontStyle=1;labelBackgroundColor=#FFFFFF;" target="dbmsg" value="③ JDBC">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+    <mxCell id="r1" edge="1" parent="1" source="rabbit" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#C00000;strokeWidth=2;dashed=1;endArrow=block;endFill=1;fontSize=11;fontStyle=1;fontColor=#C00000;labelBackgroundColor=#FFFFFF;entryX=0.5;entryY=1;entryDx=0;entryDy=0;exitX=0.5;exitY=0;exitDx=0;exitDy=0;" target="messages" value="④ Publica evento (AMQP)">
+      <mxGeometry relative="1" x="0.5883" y="3" as="geometry">
+        <mxPoint as="offset" />
+        <Array as="points">
+          <mxPoint x="914.4" y="911" />
+          <mxPoint x="914.4" y="856.9" />
+          <mxPoint x="1071" y="856.9" />
+        </Array>
+        <mxPoint x="1182.46" y="882.33" as="sourcePoint" />
+      </mxGeometry>
+    </mxCell>
+    <mxCell id="r2" edge="1" parent="1" source="rabbit" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#C00000;strokeWidth=2;dashed=1;endArrow=block;endFill=1;fontSize=11;fontStyle=1;fontColor=#C00000;labelBackgroundColor=#FFFFFF;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="realtime" value="⑤ Consume evento (AMQP)">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+    <mxCell id="ws" edge="1" parent="1" source="realtime" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#9673A6;strokeWidth=3;startArrow=block;startFill=1;endArrow=block;endFill=1;fontSize=12;fontStyle=1;fontColor=#7A4F99;labelBackgroundColor=#FFFFFF;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.396;entryY=1.006;entryDx=0;entryDy=0;entryPerimeter=0;" target="zClient" value="⑥ WebSocket (WS / WSS) · bidireccional">
+      <mxGeometry relative="1" x="-0.065" y="10" as="geometry">
+        <mxPoint as="offset" />
+        <Array as="points">
+          <mxPoint x="1420" y="1089.6" />
+          <mxPoint x="155" y="1089.6" />
+        </Array>
+        <mxPoint x="1253.4999999999995" y="1014" as="sourcePoint" />
+        <mxPoint x="154.5" y="573" as="targetPoint" />
+      </mxGeometry>
+    </mxCell>
+    <mxCell id="63V3fj7-P5tldOxvVjzz-3" edge="1" parent="1" source="rabbit" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#C00000;strokeWidth=2;dashed=1;endArrow=block;endFill=1;fontSize=11;fontStyle=1;fontColor=#C00000;labelBackgroundColor=#FFFFFF;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" target="users" value="④ Publica evento (AMQP)">
+      <mxGeometry relative="1" x="-1" y="-840" as="geometry">
+        <mxPoint x="-321" y="661" as="offset" />
+        <Array as="points">
+          <mxPoint x="880" y="893" />
+          <mxPoint x="791" y="893" />
+          <mxPoint x="791" y="280.9" />
+          <mxPoint x="1071" y="280.9" />
+        </Array>
+        <mxPoint x="600" y="893" as="sourcePoint" />
+        <mxPoint x="791" y="720" as="targetPoint" />
+      </mxGeometry>
+    </mxCell>
+    <mxCell id="63V3fj7-P5tldOxvVjzz-4" edge="1" parent="1" source="rabbit" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#C00000;strokeWidth=2;dashed=1;endArrow=block;endFill=1;fontSize=11;fontStyle=1;fontColor=#C00000;labelBackgroundColor=#FFFFFF;entryX=0.5;entryY=1;entryDx=0;entryDy=0;exitX=0.56;exitY=-0.01;exitDx=0;exitDy=0;exitPerimeter=0;" target="conversations" value="④ Publica evento (AMQP)">
+      <mxGeometry relative="1" x="-1" y="663" as="geometry">
+        <mxPoint x="100" y="-8" as="offset" />
+        <Array as="points">
+          <mxPoint x="891.2" y="909.9" />
+          <mxPoint x="891.2" y="546.1" />
+          <mxPoint x="1071" y="546.1" />
+        </Array>
+        <mxPoint x="548" y="1056" as="sourcePoint" />
+        <mxPoint x="739" y="883" as="targetPoint" />
+      </mxGeometry>
+    </mxCell>
+    <mxCell id="63V3fj7-P5tldOxvVjzz-5" edge="1" parent="1" source="Fvqgt8j2kgwH2tz2cn6K-1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;innerLoopWaypoints=1;exitX=0;exitY=0.75;exitDx=0;exitDy=0;defaultLabelBackgroundColor=page;" target="Fvqgt8j2kgwH2tz2cn6K-1">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+  </root>
+</mxGraphModel>

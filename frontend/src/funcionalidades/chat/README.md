@@ -1,6 +1,6 @@
 # Chat
 
-Frontend del `servicio-chat`, enfocado en la experiencia de comunicacion en tiempo real.
+Frontend del `servicio-tiempo-real`, enfocado en la experiencia de comunicacion en tiempo real.
 
 - `componentes/`: ventana, encabezado y compositor del chat.
 - `paginas/`: vistas de chat.
