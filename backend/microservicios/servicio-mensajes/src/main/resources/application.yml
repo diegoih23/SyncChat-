@@ -1,0 +1,21 @@
+server:
+  port: ${PORT:8084}
+spring:
+  application:
+    name: servicio-mensajes
+  datasource:
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:mensajes}
+    username: ${DB_USER:syncchat}
+    password: ${DB_PASSWORD:syncchat}
+    driver-class-name: org.postgresql.Driver
+  rabbitmq:
+    host: ${RABBITMQ_HOST:localhost}
+    port: ${RABBITMQ_PORT:5672}
+    username: ${RABBITMQ_USER:syncchat}
+    password: ${RABBITMQ_PASSWORD:syncchat}
+syncchat:
+  jwt:
+    secret: ${JWT_SECRET:syncchat-development-secret-key-change-in-production-32}
+  conversaciones:
+    participantes-url: ${CONVERSATIONS_AUTH_URL:http://localhost:8082/api/conversaciones}
+    service-token: ${AUTH_DIRECTORY_TOKEN:syncchat-directory-development-token}

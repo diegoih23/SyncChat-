@@ -1,0 +1,21 @@
+services:
+  servicio-tiempo-real:
+    build: ../microservicios/servicio-tiempo-real
+    ports:
+      - "8085:8085"
+    environment:
+      PORT: 8085
+      RABBITMQ_HOST: ${JUAN_IP:-192.168.1.10}
+      RABBITMQ_PORT: 5672
+      RABBITMQ_USER: ${RABBITMQ_USER:?RABBITMQ_USER debe configurarse en el archivo .env}
+      RABBITMQ_PASSWORD: ${RABBITMQ_PASSWORD:?RABBITMQ_PASSWORD debe configurarse en el archivo .env}
+      JWT_SECRET: ${JWT_SECRET:?JWT_SECRET debe configurarse en el archivo .env}
+      CORS_ALLOWED_ORIGINS: http://${JUAN_IP:-192.168.1.10}:3000
+      CONVERSATIONS_AUTH_URL: http://${JOSIBEL_IP:-192.168.1.12}:8082/api/conversaciones
+      AUTH_DIRECTORY_TOKEN: ${AUTH_DIRECTORY_TOKEN:?AUTH_DIRECTORY_TOKEN debe configurarse en el archivo .env}
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://localhost:8085/actuator/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 40s
